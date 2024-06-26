@@ -39,7 +39,6 @@ formSearch.addEventListener('submit', async e => {
     }
     try {
         const data = await displayImage(image, currentPage);
-        console.log(data);
         maxPage = Math.ceil(data.totalHits / perPage);
         if (maxPage === 0) {
             iziToast.error({
@@ -72,8 +71,10 @@ btnLoadMore.addEventListener('click', async () => {
         
         list.insertAdjacentHTML('beforeend', renderImage(data.hits));
         skipOldElem();
-    } catch {
-        console.log('error');
+    } catch(error) {
+        iziToast.error({
+            message: "Error!",
+        })
     }
     hideLoader();
     updateBtnStatus();

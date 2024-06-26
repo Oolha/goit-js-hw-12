@@ -23,10 +23,11 @@ export async function displayImage(image, currentPage) {
                 page: currentPage,
             }
         })
-        console.log(res);
         return res.data;
     } catch (error) {
-console.log(error);
+        iziToast.error({
+            message: "Error!",
+        })
     }
 }
 
