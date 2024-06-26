@@ -10,87 +10,87 @@ const formSearch = document.querySelector(".form-js");
 const inputSearch = document.querySelector(".input-js");
 const list = document.querySelector(".image-list");
 const loader = document.querySelector(".loader");
-const btnSearch = document.querySelector(".btn-js");
 const btnLoadMore =document.querySelector(".btn-load-more")
-
-
-
-formSearch.addEventListener('submit', async e => {
-    e.preventDefault();
-    const inputValue = inputSearch.value.trim();
-    if (inputValue === '') {
-        list.innerHTML = ' ';
-    }
-    showLoader();
-
-    try {
-        const images = await displayImage(inputValue);
-     if (images.hits.length !== 0) {
-            renderImage(images.hits);
-        }
-        else {
-            iziToast.error({
-                message: "Sorry, there are no images matching your search query. Please try again!",
-                messageColor: '#fafafa',
-                color: '#ef4040',
-                position: 'topRight'
-
-            });
-        }
-    }
-    catch (error) {
-        iziToast.error({
-            message: "An error occurred while fetching images. Please try again later."
-        })
-    };
-    hideLoader();
-    e.target.reset();
-    
-});
-
 
 let image = '';
 let currentPage = 1;
 let maxPage = 1;
 const perPage = 15;
 
-
-btnSearch.addEventListener('click', async () => {
+formSearch.addEventListener('submit', async e => {
+    e.preventDefault();
     image = inputSearch.value.trim();
     currentPage = 1;
-    hideLoadMore();
-    const data = await displayImage(image, currentPage);
-    console.log(data);
-    maxPage = Math.ceil(data.totalHits / perPage);
-    const markup = renderImage(data.hits);
-    list.innerHTML = markup;
+    list.innerHTML = '';
 
+    showLoader();
+    hideLoadMore();
+
+    if (image === '') {
+        iziToast.warning({
+            title: 'Warning!',
+            message: "Query must be field!",
+            position: 'topRight',
+            backgroundColor: '#ef4040',
+            layout: 2,
+        })
+        hideLoader();
+        return;
+    }
+    try {
+        const data = await displayImage(image, currentPage);
+        console.log(data);
+        maxPage = Math.ceil(data.totalHits / perPage);
+        if (maxPage === 0) {
+            iziToast.error({
+                title: "Empty result",
+                message: "No images found!"
+            });
+            
+            hideLoader();
+            updateBtnStatus();
+            return; 
+        }
+        renderImage(data.hits);
+        
+    } catch(error) {
+        iziToast.error({
+            message: "Error!",
+        })
+    }
+    hideLoader();
     updateBtnStatus();
-})
+    e.target.reset();
+});
 btnLoadMore.addEventListener('click', async () => {
 
     currentPage++;
     hideLoadMore();
-    const data = await displayImage(image, currentPage);
-    const markup = renderImage(data.hits);
-    list.insertAdjacentElement('beforeend', markup);
+    showLoader();
+    try {
+        const data = await displayImage(image, currentPage);
+        
+        list.insertAdjacentHTML('beforeend', renderImage(data.hits));
+        skipOldElem();
+    } catch {
+        console.log('error');
+    }
+    hideLoader();
     updateBtnStatus();
-}
-)
-
+});
 function updateBtnStatus() {
     if (currentPage >= maxPage) {
         hideLoadMore();
-        iziToast.info({
-            title: 'The End!',
-            message: 'The end of collection',
-        })
+
+        if (maxPage !== 0) {
+            iziToast.info({
+                message: "We're sorry, but you've reached the end of search results.",
+            })
+        }
     } else {
         showLoadMore();
     }
 }
-
-
 
 function showLoadMore() {
     btnLoadMore.classList.remove('hidden');
@@ -107,3 +107,15 @@ function hideLoader() {
     loader.classList.add('hidden');
 }
 
+function skipOldElem() {
+   const liElem = list.querySelector('.images-item');
+    if (liElem) {
+        const height = liElem.getBoundingClientRect().height;
+        window.scrollBy({
+            top: height * 2,
+            behavior: 'smooth',
+        });
+    }
+}
+
+ 

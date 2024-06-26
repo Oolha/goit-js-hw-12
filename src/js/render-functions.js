@@ -1,8 +1,6 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-const formSearch = document.querySelector(".form-js");
-const inputSearch = document.querySelector(".input-js");
 const list = document.querySelector(".image-list");
 
 export function renderImage(images) {
@@ -31,4 +29,5 @@ export function renderImage(images) {
 
 });
     lightbox.refresh();
+    return markup;
 }

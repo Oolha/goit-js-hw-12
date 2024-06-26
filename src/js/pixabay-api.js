@@ -1,9 +1,5 @@
 import Axios from 'axios';
 
-const formSearch = document.querySelector(".form-js");
-const inputSearch = document.querySelector(".input-js");
-const list = document.querySelector(".image-list");
-
 const axios = Axios.create(
     {
         baseURL: 'https://pixabay.com/api/',

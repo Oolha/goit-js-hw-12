@@ -9,13 +9,17 @@
   </head>
   <body>
     <section>
+      <div>
       <form class="form-js">
         <input type="text" placeholder="Search images..." class="input-js" name="'query"/>
         <button type="submit" class="btn-js">Search</button>
       </form>
-      <span class="loader hidden"></span>
+      </div>
       <ul class="image-list"></ul>
+      <span class="loader hidden"></span>
+      <div class="btn-box">
       <button type="button" class="btn-load-more hidden">Load more</button>
+      </div>
     </section>
     <script type="module" src="./main.js"></script>
     <script type="module" src="./js/pixabay-api.js"></script>
