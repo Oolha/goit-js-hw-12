@@ -17,6 +17,14 @@ let currentPage = 1;
 let maxPage = 1;
 const perPage = 15;
 
+let lightbox = new SimpleLightbox('.image-list a', {
+  captions: true,
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250
+
+});
+
 formSearch.addEventListener('submit', async e => {
     e.preventDefault();
     image = inputSearch.value.trim();
@@ -51,6 +59,7 @@ formSearch.addEventListener('submit', async e => {
             return; 
         }
         renderImage(data.hits);
+        lightbox.refresh();
         
     } catch(error) {
         iziToast.error({
@@ -68,8 +77,8 @@ btnLoadMore.addEventListener('click', async () => {
     showLoader();
     try {
         const data = await displayImage(image, currentPage);
-        
-        list.insertAdjacentHTML('beforeend', renderImage(data.hits));
+        renderImage(data.hits);
+        lightbox.refresh();
         skipOldElem();
     } catch(error) {
         iziToast.error({

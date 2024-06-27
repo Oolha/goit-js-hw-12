@@ -1,5 +1,3 @@
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
 
 const list = document.querySelector(".image-list");
 
@@ -18,16 +16,7 @@ export function renderImage(images) {
         </a>
     </li>`;
     }).join('');
-    list.innerHTML = markup;
+    list.insertAdjacentHTML('beforeend', markup);
 
-
-    const lightbox = new SimpleLightbox('.image-list a', {
-  captions: true,
-  captionsData: 'alt',
-  captionPosition: 'bottom',
-  captionDelay: 250
-
-});
-    lightbox.refresh();
     return markup;
 }
